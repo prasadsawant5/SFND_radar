@@ -107,7 +107,7 @@ range_fft = abs(range_fft / len);
  % *%TODO* :
 % Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 % Hence we throw out half of the samples.
-range_fft = range_fft(1:L / 2+1);
+range_fft = range_fft(1:len / 2+1);
 
 
 %plotting the range
@@ -117,7 +117,8 @@ subplot(2,1,1)
  % *%TODO* :
  % plot FFT output 
 f = Bsweep*(0:(len / 2)) / len;
-plot(f, range_fft)
+R = (c*Tchirp*f)/(2*Bsweep);
+plot(R, range_fft)
  
 axis ([0 200 0 1]);
 
@@ -150,7 +151,7 @@ RDM = 10*log10(RDM) ;
 %dimensions
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
-figure,surf(doppler_axis,range_axis,RDM);
+figure('Name', 'Radar Doppler Map'),surf(doppler_axis,range_axis,RDM);
 
 %% CFAR implementation
 
@@ -190,6 +191,8 @@ noise_level = zeros(1,1);
 
    % Use RDM[x,y] as the matrix from the output of 2D FFT for implementing
    % CFAR
+   
+signal_cfar = zeros(Nr/2,Nd);
 
 num_cells = (2*Tr+2*Gr+1)*(2*Td+2*Gd+1) - (2*Gr+1)*(2*Gd+1);
 
@@ -245,7 +248,7 @@ end
 % *%TODO* :
 %display the CFAR output using the Surf function like we did for Range
 %Doppler Response output.
-figure,surf(doppler_axis,range_axis,'replace this with output');
+figure('Name', 'CFAR Output'),surf(doppler_axis,range_axis,signal_cfar);
 colorbar;
 
 
